@@ -1,5 +1,5 @@
 {
-    "name": "react-audio-player",
+    "name": "@mrideout1985/react-audio-player",
     "version": "1.0.0",
     "description": "audio player build in react. ",
     "publishConfig": {
