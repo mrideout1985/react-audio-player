@@ -13,39 +13,17 @@ import {
 import React, { MutableRefObject, useEffect, useState, useRef } from 'react'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import SettingsIcon from '@mui/icons-material/Settings'
+import { PlayPauseButton } from './playPauseButton/playPauseButton'
 import {
     Speaker,
     VolumeDownRounded,
     VolumeUpRounded,
 } from '@mui/icons-material'
-import { PlayPauseButton } from './playPauseButton/playPauseButton'
 
 interface AudioPlayer {
     src: any
     transcription: string
 }
-
-/* 
-TODO:
-x play pause toggle Button. 
-x -current time of song
-x -total time of song
-x -play scrubber
-x -playback rate button
--volume button
- -loop button
--volume control
--mute toggle
-
-Acceptance criteria
--keyboard accessible
--transcripts are visible
--screen reader friendly
--transcripts are visible
-
-onloaded metadata
-
-*/
 
 function AudioPlayer({ src, transcription }: AudioPlayer) {
     const [playing, setPlaying] = useState(false)
@@ -212,4 +190,4 @@ function AudioPlayer({ src, transcription }: AudioPlayer) {
     )
 }
 
-export { AudioPlayer }
+export default AudioPlayer
