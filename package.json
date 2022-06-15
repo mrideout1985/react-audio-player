@@ -1,6 +1,6 @@
 {
     "name": "@mrideout1985/react-audio-player",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "audio player build in react. ",
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/mrideout1985"
