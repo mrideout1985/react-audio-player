@@ -14,11 +14,14 @@ import React, { MutableRefObject, useEffect, useState, useRef } from 'react'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { PlayPauseButton } from './playPauseButton/playPauseButton'
+import styles from './audioplayer.module.scss'
 import {
     Speaker,
     VolumeDownRounded,
     VolumeUpRounded,
 } from '@mui/icons-material'
+import { Rewind } from './rewind/rewind'
+import { Skip } from './skip/skip'
 
 interface AudioPlayer {
     src: any
@@ -28,10 +31,9 @@ interface AudioPlayer {
 function AudioPlayer({ src, transcription }: AudioPlayer) {
     const [playing, setPlaying] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-    const [hover, setHover] = useState(false)
     const [mediaTime, setMediaTime] = useState<number>(0)
+    const [volume, setVolume] = useState<number>(1)
     const [duration, setDuration] = useState<number>(0)
-    const [volume, setVolume] = useState<number>(0)
     const ref = useRef() as MutableRefObject<HTMLAudioElement>
     const open = Boolean(anchorEl)
 
@@ -62,12 +64,10 @@ function AudioPlayer({ src, transcription }: AudioPlayer) {
         ref.current.currentTime = playHead
     }
     const volumeChange = (e: any) => {
-        const parsedVolume = parseInt(e.target.value)
-        const volumeHead = parsedVolume / 100
-        setVolume(volumeHead)
-        ref.current.volume = volumeHead
+        const parsedVolume = parseInt(e.target.value) / 100
+        setVolume(parsedVolume)
+        ref.current.volume = parsedVolume
     }
-    console.log(volume)
 
     const changeSpeed = (rate: number) => {
         ref.current.playbackRate = rate
@@ -92,67 +92,65 @@ function AudioPlayer({ src, transcription }: AudioPlayer) {
             ? new Date(mediaTime * 1000).toISOString().substring(11, 19)
             : new Date(mediaTime * 1000).toISOString().substring(14, 19)
     }
-
-    const displaySongDuration = () => {
-        // const timeCheck =
-        //     duration >= 18000
-        //         ? new Date(duration * 1000).toISOString().substring(11, 19)
-        //         : new Date(duration * 1000).toISOString().substring(14, 19)
-        return new Date(duration * 1000).toISOString().substring(14, 19)
-    }
-
     return (
-        <Box
-            display={'flex'}
-            alignItems={'center'}
-            width="100%"
-            height="100%"
-            gap={'.5rem'}
-        >
-            {/* <SkipSecondsButton skipBack={backFive} skipForward={forwardFive} /> */}
-            <PlayPauseButton playing={playing} togglePlaying={togglePLaying} />
-            <VolumeUpIcon color="primary" />
-            <Typography fontWeight={'900'}>{displaySongCounter()}</Typography>
-            <Slider
-                value={mediaTime ?? 0}
-                min={0}
-                max={duration}
-                onChange={scrubberChange}
-                sx={{ margin: '0 1rem' }}
-            />
-            {/* <Grow
-                in={hover}
-                style={{ transformOrigin: '0' }}
-                {...(hover ? { timeout: 1000 } : {})}
-            >
-                <Stack height={'200px'}>
-                    <Slider
-                        aria-label="Volume"
-                        min={0}
-                        max={100}
-                        size="small"
-                        orientation="vertical"
-                        defaultValue={30}
-                        onChange={(e) => volumeChange(e)}
+        <div className={styles.container}>
+            <div className={styles.audio}>
+                <div className={styles.controls}>
+                    <Rewind rewind={backFive} />
+                    <PlayPauseButton
+                        playing={playing}
+                        togglePlaying={togglePLaying}
                     />
-                </Stack>
-            </Grow> */}
-            <Typography fontWeight={'900'}>{displaySongDuration()}</Typography>
-
-            <IconButton
-                aria-label="settings"
-                color={'primary'}
-                size="small"
-                id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) =>
-                    setAnchorEl(event.currentTarget)
-                }
-            >
-                <SettingsIcon />
-            </IconButton>
+                    <Skip skip={forwardFive} />
+                </div>
+                <div className={styles.playbackContainer}>
+                    <div className={styles.volume}>
+                        <VolumeUpIcon color="primary" tabIndex={0} />
+                        <Slider
+                            aria-label="Volume"
+                            min={0}
+                            max={100}
+                            size="small"
+                            defaultValue={30}
+                            onChange={(e) => volumeChange(e)}
+                            className={styles.volumeSlider}
+                        />
+                    </div>
+                    <Typography fontWeight={'100'}>
+                        {displaySongCounter()}
+                    </Typography>
+                    <Slider
+                        value={mediaTime ?? 0}
+                        min={0}
+                        max={duration || 100}
+                        onChange={scrubberChange}
+                        sx={{ margin: '0 1rem', width: '100%' }}
+                    />
+                    <Typography fontWeight={'100'}>
+                        {duration
+                            ? new Date(duration * 1000)
+                                  .toISOString()
+                                  .substring(14, 19)
+                            : '01:40'}
+                    </Typography>
+                    <div className={styles.settings}>
+                        <IconButton
+                            aria-label="settings"
+                            color={'primary'}
+                            size="small"
+                            id="basic-button"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={(
+                                event: React.MouseEvent<HTMLButtonElement>
+                            ) => setAnchorEl(event.currentTarget)}
+                        >
+                            <SettingsIcon />
+                        </IconButton>
+                    </div>
+                </div>
+            </div>
             <Menu
                 id="basic-menu"
                 open={open}
@@ -186,7 +184,7 @@ function AudioPlayer({ src, transcription }: AudioPlayer) {
                 onPlaying={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
             />
-        </Box>
+        </div>
     )
 }
 

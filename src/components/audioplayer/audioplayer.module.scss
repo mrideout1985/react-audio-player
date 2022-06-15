@@ -1,0 +1,50 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    .audio {
+        width: 500px;
+        .playbackContainer {
+            display: flex;
+            align-items: center;
+            .volume {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                transition: all 0.3s ease-out;
+                width: 10%;
+                margin: 0 1rem;
+
+                &:hover {
+                    width: 50%;
+                    .volumeSlider {
+                        visibility: visible;
+                        width: 100%;
+                    }
+                }
+
+                .volumeSlider {
+                    visibility: collapse;
+                    width: 0%;
+                    transition: all 0.3s ease-out;
+                }
+            }
+        }
+    }
+    .volumeAndSettings {
+        display: flex;
+        align-items: center;
+        width: 200px;
+
+        .settings {
+            display: flex;
+            align-items: center;
+        }
+    }
+    .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
